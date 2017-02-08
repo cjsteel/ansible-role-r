@@ -14,7 +14,7 @@ r_state         : present     # absent, present
 # Supported Packages
 #
 # A number of R packages are available from the Ubuntu repositories with names starting with r-cran-. The following ones are kept up-to-date on CRAN: all packages part of the r-recommended bundle, namely
-r_all_available_ubuntu_packages:
+r_ubuntu_16.04_packages:
 
   - r-cran-boot
   - r-cran-class
@@ -34,11 +34,14 @@ r_all_available_ubuntu_packages:
 
 # key info
 
-#r_keyserver_url: hkp://keyserver.ubuntu.com:80
-#r_key_id       : E084DAB9
+#r_keyserver_url    : hkp://keyserver.ubuntu.com:80
+#r_key_id           : E084DAB9
+#r_cran_mirror      : 'http://cran.utstat.utoronto.ca/'  # University of Toronto
+#r_ubuntu_backports : 'deb http://ubuntu.mirror.iweb.ca/ xenial-backports main restricted universe'
+
 
 ## Canadian cran mirrors
-
+#
 # http://cran.stat.sfu.ca/ 	Simon Fraser University, Burnaby
 # https://muug.ca/mirror/cran/ 	Manitoba Unix User Group
 # http://muug.ca/mirror/cran/ 	Manitoba Unix User Group
@@ -50,5 +53,9 @@ r_all_available_ubuntu_packages:
 # Installation and compilation of R or some of its packages may require Ubuntu packages from the "backports" repositories. Therefore, it is suggested to activate the backports repositories with an entry like 
 
 #    deb https://<my.favorite.ubuntu.mirror>/ trusty-backports main restricted universe
+#
+#    deb http://ubuntu.mirror.iweb.ca/ xenial-backports main restricted universe
+#    deb-src http://ubuntu.mirror.iweb.ca/ xenial-backports main restricted universe
+
 
 # in your /etc/apt/sources.list file.

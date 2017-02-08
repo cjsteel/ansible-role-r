@@ -4,30 +4,15 @@
 
 # sudo apt-get update
 # DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
-# sudo apt-get upgrade -y
-### install any utilities
 
-#- name: "Install aptitude"
-#  apt: >
-#    update_cache=yes
-#    name='{{ item }}'
-#    state='{{ r_state }}'
-#  with_items:
-#    - aptitude
-#  tags: [ 'packages', 'utilities' ]
-
-- name: "apt-get upgrade, keep old configs, use new config when no old config exists"
-  apt:
-    update_cache: yes
-    cache_valid_time: 3600
-    upgrade: 'yes'
-    dpkg_options: 'force-confold,force-confdef'
-  when: r_state == 'present'
-
-# Equivalent to :
-#
-#     sudo apt-get dist-upgrade -y
-#     DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
+- name: "Install aptitude"
+  apt: >
+    update_cache=yes
+    name='{{ item }}'
+    state='{{ r_state }}'
+  with_items:
+    - aptitude
+  tags: [ 'packages', 'utilities' ]
 
 - name: "apt-get dist-upgrade, keep old configs, use new config when no old config exists" 
   apt:
@@ -49,23 +34,17 @@
 
 - apt_repository:
     mode: 0644
-    repo: deb https://cran.utstat.utoronto.ca/bin/linux/ubuntu  {{ ansible_distribution_release }}/
+    repo: deb http://cran.utstat.utoronto.ca/bin/linux/ubuntu  {{ ansible_distribution_release }}/
     state: '{{ r_state }}'
+#    filename: 'cran_utstat_utoronto_ca_bin_linux_ubuntu' # .list is appended by the module
     update_cache: yes
-    filename: 'cran_utstat_utoronto_ca.sources' # .list is appended by the module
-    update_cache: yes
-
-- name: "update apt cache"
-  apt: >
-    update_cache=yes
-    cache_valid_time=43200
-  tags: [ 'packages' ]
 
 ## install r
 
 - name: "Install (or remove) 'r-base'"
   apt: >
     update_cache=yes
+    cache_valid_time=43200
     name='{{ item }}'
     state='{{ r_state }}'
   with_items:
