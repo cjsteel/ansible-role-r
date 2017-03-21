@@ -5,6 +5,8 @@
 # sudo apt-get update
 # DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
 
+## update dist upgrade
+
 - name: "Install aptitude"
   apt: >
     update_cache=yes
@@ -50,4 +52,16 @@
   with_items:
     - r-base
   tags: [ 'packages', 'utilities' ]
+
+- name: "Install (or remove) 'r-base-dev'"
+  apt: >
+    update_cache=yes
+    cache_valid_time=43200
+    name='{{ item }}'
+    state='{{ r_state }}'
+  with_items:
+    - r-base-dev
+  when: r_dev_install == true
+  tags: [ 'packages', 'utilities' ]
+
 

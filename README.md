@@ -10,6 +10,7 @@ Requirements
 
 * **The apt_repository** Ansible module **filename** option requires Ansible 2.1 or greater. See [ apt_repository module]( http://docs.ansible.com/ansible/apt_repository_module.html#examples ).
 
+
 Role Variables
 --------------
 
@@ -75,10 +76,12 @@ r_ubuntu_16.04_packages:
 #    deb-src http://ubuntu.mirror.iweb.ca/ xenial-backports main restricted universe
 ```
 
+
 Dependencies
 ------------
 
 None.
+
 
 Example Playbook
 ----------------
@@ -105,6 +108,19 @@ cp roles/r/files/r.yml .
 ```shell
 ansible-playbook -i inventory/dev systems.yml
 ```
+
+## Testing
+
+### Vagrant
+
+```shell
+vagrant up
+```
+
+### Travis
+
+To implement
+
 
 
 

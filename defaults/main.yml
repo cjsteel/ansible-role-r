@@ -10,11 +10,16 @@
 # r installation state
 
 r_state         : present     # absent, present
+# r_version       : 3.3.2
+# r_version_name  : 'Sincere Pumpkin Patch'
+r_dev_install   : true
 
 # Supported Packages
 #
-# A number of R packages are available from the Ubuntu repositories with names starting with r-cran-. The following ones are kept up-to-date on CRAN: all packages part of the r-recommended bundle, namely
-r_ubuntu_16.04_packages:
+# A number of R packages are available from the Ubuntu repositories with names starting with r-cran-. The following ones are kept up-to-date on CRAN. all packages listed are part of the r-recommended bundle
+
+# this var not used at this time
+r_cran_ubuntu_16.04_packages:
 
   - r-cran-boot
   - r-cran-class
