@@ -1,7 +1,5 @@
 ---
 # file: roles/r/defaults/main.yml
-#
-#
 
 # Resources
 #
@@ -10,9 +8,11 @@
 # r installation state
 
 r_state         : present     # absent, present
+r_dist_upgrade  : false
+r_dev_install   : true
 # r_version       : 3.3.2
 # r_version_name  : 'Sincere Pumpkin Patch'
-r_dev_install   : true
+
 
 # Supported Packages
 #

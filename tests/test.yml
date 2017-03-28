@@ -1,5 +1,7 @@
 ---
 - hosts: localhost
-  remote_user: root
+  become: true
+#  remote_user: root
+  gather_facts: true
   roles:
-    - r
+    - ansible-role-{{ short_role_name }}

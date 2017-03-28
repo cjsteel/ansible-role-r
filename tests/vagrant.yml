@@ -1,16 +1,20 @@
-# roles/r/tests/vagrant.yml
 ---
+# file: roles/r/tests/vagrant.yml
+
 - hosts: all
-  remote_user: vagrant
-  sudo: true
+  remote_user: 'ubuntu'
+  become: false # or local directory creation will fail
+  vars:
+    r_remote_user : 'ubuntu'
+    r_state         : 'present'
+    r_dist_upgrade  : false
+    r_dev_install   : true
+    r_build         : false
+    r_reboot_target : false
+
+
   roles:
     - ../../
 
-  vars:
-
-    - freesurfer_ver  : '1.0.2-2'
-    - freesurfer_arch : '{{ ansible_architecture }}'
-    - freesurfer_pkg  : 'libxp6_{{ freesurfer_ver }}_{{ freesurfer_arch }}.deb'
-    - freesurfer_deb_url  : 'http://mirrors.kernel.org/ubuntu/pool/main/libx/libxp/{{ freesurfer_pkg }}'
   
 

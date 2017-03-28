@@ -1,13 +1,9 @@
 ---
 
-## prepare base OS
-
-# sudo apt-get update
-# DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
-
-## update dist upgrade
+## install aptitude
 
 - name: "Install aptitude"
+  become: true
   apt: >
     update_cache=yes
     name='{{ item }}'
@@ -16,34 +12,43 @@
     - aptitude
   tags: [ 'packages', 'utilities' ]
 
+## run a dist upgrad just in case
+
 - name: "apt-get dist-upgrade, keep old configs, use new config when no old config exists" 
+  become: true
   apt:
     update_cache: yes
     cache_valid_time: 3600
     upgrade: 'dist'
     dpkg_options: 'force-confold,force-confdef'
-  when: r_state == 'present'
+  when: r_state == 'present' and r_dist_upgrade == true
+
+## install apt key for ubuntu r packages
 
 - name: "install apt-key for ubuntu R packages keyserver"
+  become: true
   apt_key: >
     keyserver="hkp://keyserver.ubuntu.com:80"
     id="E084DAB9"
     state='{{ r_state }}'
 
-# Add specified repository into sources list using specified filename.
+# Add specified repository to sources
 #
 # is this really idempotent?
 
-- apt_repository:
+- name: "add cran_utstat_utoronto_ca_bin_linux_ubuntu to apt sources.d"
+  become: true
+  apt_repository:
     mode: 0644
     repo: deb http://cran.utstat.utoronto.ca/bin/linux/ubuntu  {{ ansible_distribution_release }}/
     state: '{{ r_state }}'
 #    filename: 'cran_utstat_utoronto_ca_bin_linux_ubuntu' # .list is appended by the module
     update_cache: yes
 
-## install r
+## install r base
 
 - name: "Install (or remove) 'r-base'"
+  become: true
   apt: >
     update_cache=yes
     cache_valid_time=43200
@@ -53,7 +58,10 @@
     - r-base
   tags: [ 'packages', 'utilities' ]
 
+## install r base dev tools when desired
+
 - name: "Install (or remove) 'r-base-dev'"
+  become: true
   apt: >
     update_cache=yes
     cache_valid_time=43200
@@ -63,5 +71,4 @@
     - r-base-dev
   when: r_dev_install == true
   tags: [ 'packages', 'utilities' ]
-
 
