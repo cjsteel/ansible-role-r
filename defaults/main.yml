@@ -7,7 +7,7 @@
 
 # r installation state
 
-r_state         : present     # absent, present
+r_state         : 'present'     # absent, present
 r_dist_upgrade  : false
 r_dev_install   : true
 # r_version       : 3.3.2

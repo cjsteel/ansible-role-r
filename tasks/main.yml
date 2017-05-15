@@ -1,8 +1,13 @@
 ---
 
-## install aptitude
+- name: "debug the value of the r_state"
+  debug:
+    var=r_state
+  tags: [ 'debug' ]
 
-- name: "Install aptitude"
+## install curl
+
+- name: "Install curl"
   become: true
   apt: >
     update_cache=yes
@@ -17,8 +22,6 @@
 - name: "apt-get dist-upgrade, keep old configs, use new config when no old config exists" 
   become: true
   apt:
-    update_cache: yes
-    cache_valid_time: 3600
     upgrade: 'dist'
     dpkg_options: 'force-confold,force-confdef'
   when: r_state == 'present' and r_dist_upgrade == true
@@ -36,24 +39,30 @@
 #
 # is this really idempotent?
 
-- name: "add cran_utstat_utoronto_ca_bin_linux_ubuntu to apt sources.d"
+#- name: "add cran_utstat_utoronto_ca_bin_linux_ubuntu to apt sources.d"
+#  become: true
+#  apt_repository:
+#    mode: 0644
+#    repo: deb http://cran.utstat.utoronto.ca/bin/linux/ubuntu  {{ ansible_distribution_release }}/
+#    state: '{{ r_state }}'
+#    update_cache: yes
+
+- name: "add cran_rstudio_com_bin_linux_ubuntu to apt sources.d"
   become: true
   apt_repository:
     mode: 0644
-    repo: deb http://cran.utstat.utoronto.ca/bin/linux/ubuntu  {{ ansible_distribution_release }}/
+    repo: 'deb https://cran.rstudio.com/bin/linux/ubuntu {{ ansible_distribution_release }}/'
     state: '{{ r_state }}'
-#    filename: 'cran_utstat_utoronto_ca_bin_linux_ubuntu' # .list is appended by the module
     update_cache: yes
 
 ## install r base
 
 - name: "Install (or remove) 'r-base'"
   become: true
-  apt: >
-    update_cache=yes
-    cache_valid_time=43200
-    name='{{ item }}'
-    state='{{ r_state }}'
+  apt:
+    update_cache: True
+    name: '{{ item }}'
+    state: '{{ r_state }}'
   with_items:
     - r-base
   tags: [ 'packages', 'utilities' ]
@@ -63,8 +72,7 @@
 - name: "Install (or remove) 'r-base-dev'"
   become: true
   apt: >
-    update_cache=yes
-    cache_valid_time=43200
+    update_cache=True
     name='{{ item }}'
     state='{{ r_state }}'
   with_items:
