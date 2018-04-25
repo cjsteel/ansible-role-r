@@ -5,17 +5,29 @@
     var=r_state
   tags: [ 'debug' ]
 
-## install curl
+# Install pre-request app for Ubuntu or Debian
+
+## Install curl
 
 - name: "Install curl"
   become: true
   apt: >
-    update_cache=yes
     name='{{ item }}'
     state='{{ r_state }}'
   with_items:
     - aptitude
   tags: [ 'packages', 'utilities' ]
+
+## Install dirmngr
+
+- name: "Install dirmngr"
+  become: true
+  apt: >
+    name='{{ item }}'
+    state='{{ r_state }}'
+  with_items:
+    - dirmngr
+  when: ansible_distribution == 'Debian'
 
 ## run a dist upgrad just in case
 
@@ -26,7 +38,7 @@
     dpkg_options: 'force-confold,force-confdef'
   when: r_state == 'present' and r_dist_upgrade == true
 
-## install apt key for ubuntu r packages
+## Install apt key for r packages
 
 - name: "install apt-key for ubuntu R packages keyserver"
   become: true
@@ -34,6 +46,16 @@
     keyserver="hkp://keyserver.ubuntu.com:80"
     id="E084DAB9"
     state='{{ r_state }}'
+  when: ansible_distribution == 'Ubuntu'
+
+- name: "install apt-key for Debian R packages keyserver"
+  become: true
+  apt_key: >
+    keyserver="hkp://keyserver.ubuntu.com:80"
+    id="E19F5F87128899B192B1A2C2AD5F960A256A04AF"
+    state='{{ r_state }}'
+  when: ansible_distribution == 'Debian'
+
 
 # Add specified repository to sources
 #
@@ -54,6 +76,16 @@
     repo: 'deb https://cran.rstudio.com/bin/linux/ubuntu {{ ansible_distribution_release }}/'
     state: '{{ r_state }}'
     update_cache: yes
+  when: ansible_distribution == 'Ubuntu' 
+
+- name: "add cran_rstudio_com_bin_linux_Debian to apt sources.d"
+  become: true
+  apt_repository:
+    mode: 0644
+    repo: 'deb http://cran.rstudio.com/bin/linux/debian stretch-cran34/'
+    state: '{{ r_state }}'
+    update_cache: yes
+  When:  ansible_distribution == 'Debian'
 
 ## install r base
 
